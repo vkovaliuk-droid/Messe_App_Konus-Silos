@@ -1,0 +1,26 @@
+{
+  "id": "./",
+  "name": "NEUERO Messe-App - Belüftungskonus und Lagarsilos",
+  "short_name": "Konus + Silos",
+  "description": "Produktinformationen zur NEUERO Belüftungskonus und Lagarsilos",
+  "start_url": "./app.html",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#020617",
+  "theme_color": "#020617",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "./bilder/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "./bilder/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    }
+  ]
+}
