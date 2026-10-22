@@ -1069,6 +1069,109 @@ html.embedded #gallery {
   -webkit-overflow-scrolling: auto;
 }
 
+/* Kompakte Übersichtstabellen für die NL-Silobaureihen */
+
+.silo-summary-wrapper {
+  width: 100%;
+  overflow: hidden;
+  border-radius: 14px;
+}
+
+.silo-summary-table {
+  width: 100%;
+  min-width: 0;
+  table-layout: fixed;
+  border-collapse: collapse;
+
+  color: #1e293b;
+  background: #ffffff;
+}
+
+.silo-summary-table th,
+.silo-summary-table td {
+  padding: 11px 14px;
+
+  border-bottom: 1px solid #dbe2ea;
+
+  font-size: 14px;
+  line-height: 1.25;
+  vertical-align: middle;
+}
+
+.silo-summary-table th {
+  width: 48%;
+
+  background: #e8edf4;
+  color: #334155;
+
+  font-weight: 700;
+  text-align: left;
+}
+
+.silo-summary-table td {
+  width: 52%;
+
+  background: #f8fafc;
+  color: #0f172a;
+
+  font-weight: 700;
+  text-align: right;
+}
+
+.silo-summary-table tr:nth-child(even) th {
+  background: #e1e7ef;
+}
+
+.silo-summary-table tr:nth-child(even) td {
+  background: #f1f5f9;
+}
+
+.silo-summary-table tr:last-child th,
+.silo-summary-table tr:last-child td {
+  border-bottom: none;
+}
+
+/* Abschnittsüberschrift innerhalb der technischen Tabelle */
+
+.silo-summary-table .silo-table-section th {
+  width: 100%;
+  padding: 10px 14px;
+
+  background: #cbd5e1;
+  color: #004388;
+
+  border-top: none;
+  border-bottom: none;
+
+  font-size: 18px;
+  font-weight: 750;
+  line-height: 1.2;
+  text-align: left;
+  letter-spacing: 0.01em;
+}
+
+/* Beschriftungen links */
+
+.silo-summary-table th[scope="row"] {
+  width: 48%;
+
+  color: #334155;
+
+  font-weight: 700;
+  text-align: left;
+}
+
+/* Werte rechts */
+
+.silo-summary-table td {
+  width: 52%;
+
+  color: #0f172a;
+
+  font-weight: 400;
+  text-align: center;
+}
+
 </style>
 
 </head>
@@ -1290,58 +1393,181 @@ html.embedded #gallery {
           Technische Daten
         </h3>
 
-        <div class="technical-table-wrapper">
-          <table class="technical-table">
-            
-            <thead>
-              <tr>
-                <th scope="col" data-i18n="type">
-                  Typ
-                </th>
-                <th scope="col">
-                  NJF2
-                </th>
-                <th scope="col">
-                  Duo
-                </th>
-              </tr>
-            </thead>
+          <div class="technical-table-wrapper silo-summary-wrapper">
+            <table class="technical-table silo-summary-table">
+              <tbody>
+                <tr class="silo-table-section">
+                  <th
+                    colspan="2"
+                    scope="colgroup"
+                    data-i18n="siloTypeSmall"
+                  >
+                    Silo-Typ NL 2-11
+                  </th>
 
-            <tbody>
-              <tr>
-                <th scope="row" data-i18n="filter_count">
-                  Filteranzahl [Stück]
-                </th>
-                <td>1</td>
-                <td>2</td>
-              </tr>
+                <tr>
+                  <th scope="row" data-i18n="siloDiameter">
+                    Durchmesser
+                  </th>
+                  <td>1,79 - 9,83 m</td>
+                </tr>
 
-              <tr>
-                <th scope="row" data-i18n="filter_length">
-                  Filterlänge [mm]
-                </th>
-                <td>1.500</td>
-                <td>1.500</td>
-              </tr>
+                <tr>
+                  <th scope="row" data-i18n="numberOfRings">
+                    Ringanzahl
+                  </th>
+                  <td>5 - 31</td>
+                </tr>
 
-              <tr>
-                <th scope="row" data-i18n="filter_diameter">
-                  Filter-Ø [mm]
-                </th>
-                <td>200</td>
-                <td>200</td>
-              </tr>
+                <tr>
+                  <th scope="row" data-i18n="siloHeightWithoutRoof">
+                    Silohöhe ohne Dach
+                  </th>
+                  <td>4,29 - 26,13 m</td>
+                </tr>
 
-              <tr>
-                <th scope="row" data-i18n="airflow_rate">
-                  Luftvolumenstrom [m³/h]
-                </th>
-                <td>ca. 550 - 1.350</td>
-                <td>ca. 1.200 - 2.300</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
+                <tr>
+                  <th scope="row" data-i18n="usableVolume">
+                    Nutzvolumen
+                  </th>
+                  <td>10,77 - 1.983,85 m³</td>
+                </tr>
+
+                <tr>
+                  <th scope="row" data-i18n="storageCapacity">
+                    Lagerkapazität*
+                  </th>
+                  <td>8,08 - 1.487,89 t</td>
+                </tr>
+
+                <tr class="silo-table-section">
+                  <th
+                    colspan="2"
+                    scope="colgroup"
+                    data-i18n="roofData"
+                  >
+                    Dach
+                  </th>
+                </tr>
+
+                <tr>
+                  <th scope="row" data-i18n="roofHeight">
+                    Dachhöhe
+                  </th>
+                  <td>0,72 - 2,82 m</td>
+                </tr>
+
+                <tr>
+                  <th scope="row" data-i18n="roofEquipment">
+                    Dachausstattung
+                  </th>
+                  <td data-i18n="roofEquipmentValue">
+                    Dachhaube und eine Dachluke
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <p
+            class="technical-footnote"
+            data-i18n="smallSeriesRoofNote"
+          >
+            Dachhöhen für NL 3 bis NL 11. Für NL 2 ist im Prospekt
+            keine Dachhöhe aufgeführt.
+          </p>
+
+          <div class="technical-table-wrapper silo-summary-wrapper">
+            <table class="technical-table silo-summary-table">
+              <tbody>
+                <tr class="silo-table-section">
+                  <th
+                    colspan="2"
+                    scope="colgroup"
+                    data-i18n="siloTypeLarge"
+                  >
+                    Silo-Typ NL 12-30
+                  </th>
+                </tr>
+
+                <tr>
+                  <th scope="row" data-i18n="siloDiameter">
+                    Durchmesser
+                  </th>
+                  <td>10,73 - 26,81 m</td>
+                </tr>
+
+                <tr>
+                  <th scope="row" data-i18n="numberOfRings">
+                    Ringanzahl
+                  </th>
+                  <td>7 - 30</td>
+                </tr>
+
+                <tr>
+                  <th scope="row" data-i18n="siloHeightWithoutRoof">
+                    Silohöhe ohne Dach
+                  </th>
+                  <td>5,97 - 25,29 m</td>
+                </tr>
+
+                <tr>
+                  <th scope="row" data-i18n="usableVolume">
+                    Nutzvolumen
+                  </th>
+                  <td>539,41 - 4.062,31 m³</td>
+                </tr>
+
+                <tr>
+                  <th scope="row" data-i18n="storageCapacity">
+                    Lagerkapazität*
+                  </th>
+                  <td>404,56 - 3.046,73 t</td>
+                </tr>
+
+                <tr class="silo-table-section">
+                  <th
+                    colspan="2"
+                    scope="colgroup"
+                    data-i18n="roofData"
+                  >
+                    Dach
+                  </th>
+                </tr>
+
+                <tr>
+                  <th scope="row" data-i18n="roofHeight">
+                    Dachhöhe
+                  </th>
+                  <td>2,92 - 5,72 m</td>
+                </tr>
+
+                <tr>
+                  <th scope="row" data-i18n="roofEquipment">
+                    Dachausstattung
+                  </th>
+                  <td data-i18n="roofEquipmentValue">
+                    Dachhaube und eine Dachluke
+                  </td>
+                </tr>
+
+                <tr>
+                  <th scope="row" data-i18n="roofOnRequest">
+                    Dach auf Anfrage
+                  </th>
+                  <td>NL 26, NL 27, NL 28, NL 30</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <p
+            class="technical-footnote"
+            data-i18n="technicalRangeNote"
+          >
+            *Lagerkapazität bei 750 kg/m³ Schüttgewicht. Die verfügbaren
+            Ringzahlen und technischen Werte sind vom gewählten Silotyp abhängig.
+          </p>
       </div>
     </section>
 
@@ -1603,6 +1829,38 @@ document.addEventListener("DOMContentLoaded", function () {
     filter_diameter: "Filter-Ø [mm]",
     airflow_rate: "Luftvolumenstrom [m³/h]",
 
+
+    roofData:
+    "Silodach",
+    siloSeriesSmall:
+      "Typ NL 2-11",
+    siloSeriesLarge:
+      "Typ NL 12-30",
+    siloType:
+      "Silo-Typ",
+    siloDiameter:
+      "Durchmesser",
+    numberOfRings:
+      "Ringanzahl",
+    siloHeightWithoutRoof:
+      "Silohöhe ohne Dach",
+    usableVolume:
+      "Nutzvolumen",
+    storageCapacity:
+      "Lagerkapazität*",
+    roofHeight:
+      "Dachhöhe",
+    roofEquipment:
+      "Dachausstattung",
+    roofEquipmentValue:
+      "Dachhaube und eine Dachluke",
+    roofOnRequest:
+      "Dach auf Anfrage",
+    smallSeriesRoofNote:
+      "Dachhöhen für NL 3 bis NL 11. Für NL 2 ist im Prospekt keine Dachhöhe aufgeführt.",
+    technicalRangeNote:
+      "*Lagerkapazität bei 750 kg/m³ Schüttgewicht. Die verfügbaren Ringzahlen und technischen Werte sind vom gewählten Silotyp abhängig.",
+
     galleryTitle: "Galerie",
     previous: "Zurück",
     next: "Weiter",
@@ -1679,6 +1937,38 @@ document.addEventListener("DOMContentLoaded", function () {
     next: "Next",
     galleryHint:
       "Swipe left or right to browse through the gallery.",
+
+
+    roofData:
+      "Silo roof",  
+    siloSeriesSmall:
+      "Type NL 2-11",
+    siloSeriesLarge:
+      "Type NL 12-30",
+    siloType:
+      "Silo type",
+    siloDiameter:
+      "Diameter",
+    numberOfRings:
+      "Number of rings",
+    siloHeightWithoutRoof:
+      "Silo height without roof",
+    usableVolume:
+      "Usable volume",
+    storageCapacity:
+      "Storage capacity*",
+    roofHeight:
+      "Roof height",
+    roofEquipment:
+      "Roof equipment",
+    roofEquipmentValue:
+      "Roof cap and one roof hatch",
+    roofOnRequest:
+      "Roof available on request",
+    smallSeriesRoofNote:
+      "Roof heights for NL 3 to NL 11. No roof height is specified for NL 2 in the brochure.",
+    technicalRangeNote:
+      "*Storage capacity based on a bulk density of 750 kg/m³. Available ring numbers and technical values depend on the selected silo type.",  
 
     openModel: "View product in 3D",
     closeModel: "Back to gallery",
