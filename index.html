@@ -835,11 +835,32 @@ line-height: 1;
   transform: scale(0.96);
 }
 
-/* Sprachschalter ausblenden, während ein PDF geöffnet ist */
+/* App-Inhalt ausblenden, während ein PDF geöffnet ist */
 
 body.pdf-is-open .language-switch,
 body.pdf-is-open .product-folder-tabs {
   display: none;
+}
+
+/*
+  Die Seite hinter dem PDF vollständig ausblenden.
+  Dadurch kann die Überschrift "Prospekte" beim Scrollen
+  nicht mehr über dem PDF erscheinen.
+*/
+
+body.pdf-is-open .content {
+  visibility: hidden;
+  pointer-events: none;
+}
+
+/*
+  PDF-Fenster bleibt sichtbar und erhält eine eigene,
+  eindeutig höhere Darstellungsebene.
+*/
+
+body.pdf-is-open .pdf-overlay.active {
+  visibility: visible;
+  pointer-events: auto;
 }
 
 /* Registerkarten für die 3-D-Modelle */
@@ -1452,6 +1473,41 @@ html.embedded #gallery {
   background-color: #eef2f7;
 }
 
+/* Stabile PDF-Darstellung auf dem iPad */
+
+.pdf-overlay {
+  z-index: 500;
+
+  overflow: hidden;
+
+  transform: translateZ(0);
+  -webkit-transform: translateZ(0);
+
+  isolation: isolate;
+  contain: paint;
+}
+
+.pdf-overlay.active {
+  display: flex;
+  flex-direction: column;
+
+  visibility: visible;
+}
+
+.pdf-overlay iframe {
+  position: relative;
+  z-index: 1;
+
+  display: block;
+
+  min-width: 0;
+  min-height: 0;
+
+  overflow: hidden;
+
+  transform: translateZ(0);
+  -webkit-transform: translateZ(0);
+}
 
 
 </style>
@@ -1589,33 +1645,33 @@ html.embedded #gallery {
 
         <button 
           class="brochure-card" 
-          onclick="openBrochure('cleaningCatalog', 'pdf/Mahlen&Mischen_Katalog.pdf')"
+          onclick="openBrochure('cleaningCatalog', 'pdf/Lagern_Katalog.pdf')"
         >
           <span class="icon">📄</span>
           <div>
             <h3 data-i18n="cleaningCatalog">
-              Gesamtkatalog Mahlen & Mischen
+              Gesamtkatalog Lagern
             </h3>
             <p data-i18n="cleaningCatalogText">
               Ausführliche technische Daten, Maße und weitere Informationen zur Hammermühle ohne Gebläse Typ RVO 
-              sowie zu weiteren Produkten aus dem Bereich Mahlen und Mischen.
+              sowie zu weiteren Produkten aus dem Bereich Lagern.
             </p>
           </div>
         </button>
 
         <button 
           class="brochure-card" 
-          onclick="openBrochure('cleaningBrochure', 'pdf/M&M_Prospekt.pdf')"
+          onclick="openBrochure('cleaningBrochure', 'pdf/NLT+NLK (Prospekt).pdf')"
         >
           <span class="icon">📄</span>
           <div>
             <h3 data-i18n="cleaningBrochure">
-              Produktprospekt Mahlen & Mischen
+              Produktprospekt Lagern
             </h3>
 
             <p data-i18n="cleaningBrochureText">
               Kompakter Überblick über unsere Produkte aus dem Bereich 
-              Mahlen und Mischen mit kurzen Informationen zu den einzelnen Produkten.
+              Lagern mit kurzen Informationen zu den einzelnen Produkten.
             </p>
           </div>
         </button>
