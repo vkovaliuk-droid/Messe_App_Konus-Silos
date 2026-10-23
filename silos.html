@@ -1330,6 +1330,23 @@ html.embedded #gallery {
             </p>
           </div>
         </button>
+        
+        <button 
+          class="brochure-card" 
+          onclick="openBrochure('cleaningBrochure', 'pdf/Reinigen_Prospekt.pdf')"
+        >
+          <span class="icon">📄</span>
+          <div>
+            <h3 data-i18n="cleaningBrochure2">
+              Produktprospekt Mahlen & Mischen
+            </h3>
+
+            <p data-i18n="cleaningBrochureText2">
+              Kompakter Überblick über unsere Produkte aus dem Bereich Mahlen und Mischen
+              mit kurzen Informationen zu den einzelnen Produkten.
+            </p>
+          </div>
+        </button>        
 
       </div>
     </section>
@@ -1702,7 +1719,7 @@ html.embedded #gallery {
           Prospekt
         </span>
         <h3 id="pdfTitle" data-i18n="pdfTitle">
-          Gesamtkatalog Mahlen & Mischen
+          Gesamtkatalog Lagern
         </h3>
       </div>
 
@@ -1791,13 +1808,17 @@ document.addEventListener("DOMContentLoaded", function () {
     downloadBrochuresText:
       "Scannen Sie den QR-Code mit Ihrem Smartphone, um alle Prospekte und Produktinformationen direkt herunterzuladen.",
 
-    cleaningCatalog: "Gesamtkatalog Mahlen & Mischen",
+    cleaningCatalog: "Gesamtkatalog Lagern",
     cleaningCatalogText:
-      "Ausführliche technische Daten, Maße und weitere Informationen zum JET-Filter Typ NJF / Duo sowie zu weiteren Produkten aus dem Bereich Mahlen und Mischen.",
+      "Technische Informationen zu Lagersilos für die Innen- und Außenaufstellung sowie zu Fundamenten, Belüftung, Zubehör und Messtechnik.",
 
-    cleaningBrochure: "Produktprospekt Mahlen & Mischen",  
+    cleaningBrochure: "Produktprospekt Lagern NLI & NL 2-11",  
     cleaningBrochureText:
-      "Kompakter Überblick über unsere Produkte aus dem Bereich Mahlen und Mischen mit kurzen Informationen zu den einzelnen Produkten.",
+      "Informationen zu den Lagersilos Typ NLI für die Innenaufstellung sowie zu den Lagersilos Typ NL 2-11 für die Außenaufstellung.",
+
+    cleaningBrochure2: "Produktprospekt Lagern NL 12-30",  
+    cleaningBrochureText2:
+      "Informationen zu den Lagersilos Typ NL 12-30 für die Außenaufstellung.",  
 
     informationTitle: "Informationen",
     productTitle: "Getreidelagersilos Typ NL für die Außenaufstellung",
@@ -1894,13 +1915,17 @@ document.addEventListener("DOMContentLoaded", function () {
     downloadBrochuresText:
       "Scan the QR code with your smartphone to download all brochures and product information directly.",
 
-    cleaningCatalog: "Complete Catalogue: Milling & Mixing",
+    cleaningCatalog: "Complete Catalogue: Storage",
     cleaningCatalogText:
-      "Detailed technical data, dimensions and further information on the JET-Filter Type NJF / Duo, as well as other products for milling and mixing.",
+      "Technical information on storage silos for indoor and outdoor installation, as well as foundations, ventilation, accessories and monitoring equipment.",
 
-    cleaningBrochure: "Product Brochure: Milling & Mixing",
+    cleaningBrochure: "Product Brochure: Storage NLI & NL 2-11",
     cleaningBrochureText:
-      "A compact overview of our milling and mixing products, including brief information on each product.",
+      "Information on Type NLI storage silos for indoor installation and Type NL 2-11 storage silos for outdoor installation.",
+
+    cleaningBrochure2: "Product Brochure: Storage NL 12-30",
+    cleaningBrochureText2:
+      "Information on Type NL 12-30 storage silos for outdoor installation.",  
 
     informationTitle: "Information",
     productTitle: "Grain storage silos, Type NL, for outdoor installation",
