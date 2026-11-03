@@ -863,7 +863,7 @@ body.pdf-is-open .pdf-overlay.active {
   margin: 0 auto 12px;
 
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 6px;
 
   padding: 5px;
@@ -1699,27 +1699,42 @@ html.embedded #gallery {
       aria-label="3-D-Modell auswählen"
     >
       <button
-        id="modelTabNJF2"
+        id="modelTabNL3"
         class="model-tab active"
         type="button"
         role="tab"
         aria-selected="true"
-        data-model="JET-Filter_NJF2"
-        onclick="selectProductModel('JET-Filter_NJF2')"
+        data-model="Solo NL3"
+        onclick="selectProductModel('Solo-NL3')"
+        data-i18n="modelTypeNL3"
       >
-        JET-Filter NJF2
+        Typ NL3
       </button>
 
       <button
-        id="modelTabDuo"
+        id="modelTabNL10"
         class="model-tab"
         type="button"
         role="tab"
         aria-selected="false"
-        data-model="JET-Filter_Duo"
-        onclick="selectProductModel('JET-Filter_Duo')"
+        data-model="NL10"
+        onclick="selectProductModel('Silo-NL10')"
+        data-i18n="modelTypeNL10"
       >
-        JET-Filter Duo
+        Typ NL10
+      </button>
+
+      <button
+        id="modelTabNL20"
+        class="model-tab"
+        type="button"
+        role="tab"
+        aria-selected="false"
+        data-model="NL20"
+        onclick="selectProductModel('Silo-NL20')"
+        data-i18n="modelTypeNL20"
+      >
+        Typ NL20
       </button>
     </div>
 
@@ -2450,24 +2465,32 @@ const DEFAULT_CAMERA_TARGET = "auto auto auto";
 const DEFAULT_FIELD_OF_VIEW = "30deg";
 
 const productModels = {
-  "JET-Filter_NJF2": {
-    src: "modelle/silo.glb",
+  "Solo-NL3": {
+    src: "modelle/silo10.glb",
     altDe:
       "3-D-Modell des JET-Filters NJF2",
     altEn:
       "3D model of the JET-Filter NJF2"
   },
 
-  "JET-Filter_Duo": {
-    src: "modelle/jet-filter/JET-Filter_Duo.glb",
+  "Silo-NL10": {
+    src: "modelle/silo20.glb",
     altDe:
       "3-D-Modell des JET-Filters Duo",
     altEn:
       "3D model of the JET-Filter Duo"
   },
+
+  "Silo-NL20": {
+    src: "modelle/silo30.glb",
+    altDe:
+      "3-D-Modell des JET-Filters Quadro",
+    altEn:
+      "3D model of the JET-Filter Quadro"
+  }
 };
 
-const DEFAULT_PRODUCT_MODEL = "JET-Filter_NJF2";
+const DEFAULT_PRODUCT_MODEL = "Solo-NL3";
 
 let selectedProductModel =
   DEFAULT_PRODUCT_MODEL;
