@@ -2386,10 +2386,11 @@ html.embedded #gallery {
         type="button"
         role="tab"
         aria-selected="true"
-        data-model="RVO-554"
-        onclick="selectProductModel('RVO-554')"
+        data-model="27°-normal"
+        onclick="selectProductModel('27°-normal')"
+        data-i18n="modelType27Normal"
       >
-        RVO 554
+        27° normal
       </button>
 
       <button
@@ -2398,18 +2399,45 @@ html.embedded #gallery {
         type="button"
         role="tab"
         aria-selected="false"
-        data-model="RVO-930"
-        onclick="selectProductModel('RVO-930')"
+        data-model="27°-erhoeht"
+        onclick="selectProductModel('27°-erhoeht')"
+        data-i18n="modelType27Elevated"
       >
-        RVO 930
+        27° erhöht
+      </button>
+
+      <button
+        id="modelTab45Normal"
+        class="model-tab"
+        type="button"
+        role="tab"
+        aria-selected="false"
+        data-model="45°-normal"
+        onclick="selectProductModel('45°-normal')"
+        data-i18n="modelType45Normal"
+      >
+        45° normal
+      </button>
+
+      <button
+        id="modelTab45Elevated"
+        class="model-tab"
+        type="button"
+        role="tab"
+        aria-selected="false"
+        data-model="45°-erhoeht"
+        onclick="selectProductModel('45°-erhoeht')"
+        data-i18n="modelType45Elevated"
+      >
+        45° erhöht
       </button>
     </div>
 
     <div class="model-viewer-box">
       <model-viewer
        id="productModel"
-       src="modelle/Model normal.glb"
-       alt="Interaktives 3-D-Modell der Hammermühle"
+       src="modelle/Konus_NL8_27_normal 2.glb"
+       alt="Interaktives 3-D-Modell Konus NL8 27° Normal"
        camera-controls
        touch-action="none"
        disable-tap
@@ -2616,6 +2644,11 @@ document.addEventListener("DOMContentLoaded", function () {
     galleryHint:
       "Sie können die Galerie auch nach links oder rechts wischen.",
 
+    modelType27Normal: "27° normal",
+    modelType27Elevated: "27° erhöht",
+    modelType45Normal: "45° normal",
+    modelType45Elevated: "45° erhöht",
+
     openModel: "Produkt in 3-D ansehen",
     closeModel: "Zurück zur Galerie",
     modelLoading: "3-D-Modell wird geladen …",
@@ -2717,6 +2750,11 @@ document.addEventListener("DOMContentLoaded", function () {
     next: "Next",
     galleryHint:
       "Swipe left or right to browse through the gallery.",
+
+    modelType27Normal: "27° normal",
+    modelType27Elevated: "27° elevated",
+    modelType45Normal: "45° normal",
+    modelType45Elevated: "45° elevated",
 
     openModel: "View product in 3D",
     closeModel: "Back to gallery",
@@ -3116,24 +3154,40 @@ const DEFAULT_CAMERA_TARGET = "auto auto auto";
 const DEFAULT_FIELD_OF_VIEW = "30deg";
 
 const productModels = {
-  "RVO-554": {
-    src: "modelle/Model normal.glb",
+  "27°-normal": {
+    src: "modelle/Konus_NL8_27_normal 2.glb",
     altDe:
-      "3-D-Modell der Hammermühle Typ RVO 554",
+      "3-D-Modell Konus NL8 27° Normal",
     altEn:
-      "3D model of the Hammer mill type RVO 554"
+      "3D model, Cone NL8 27° normal"
   },
 
-  "RVO-930": {
+  "27°-erhoeht": {
     src: "modelle/Konus_NL8_27_erhoeht.glb",
     altDe:
-      "3-D-Modell der Hammermühle Typ RVO 930",
+      "3-D-Modell Konus NL8 27° Erhöht",
     altEn:
-      "3D model of the Hammer mill type RVO 930"
+      "3D model, Cone NL8 27° elevated"
   },
+
+  "45°-normal": {
+    src: "modelle/Konus_NL8_45_normal.glb",
+    altDe:
+      "3-D-Modell Konus NL8 45° Normal",
+    altEn:
+      "3D model, Cone NL8 45° normal"
+  },
+
+  "45°-erhoeht": {
+    src: "modelle/Konus_NL8_45_erhoeht.glb",
+    altDe:
+      "3-D-Modell Konus NL8 45° Erhöht",
+    altEn:
+      "3D model, Cone NL8 45° elevated"
+  }
 };
 
-const DEFAULT_PRODUCT_MODEL = "RVO-554";
+const DEFAULT_PRODUCT_MODEL = "27°-normal";
 
 let selectedProductModel =
   DEFAULT_PRODUCT_MODEL;
