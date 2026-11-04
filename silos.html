@@ -1747,7 +1747,6 @@ html.embedded #gallery {
        touch-action="none"
        disable-tap
        auto-rotate
-       auto-rotate-delay="0"
        rotation-per-second="15deg"
        camera-orbit="0deg 75deg auto"
        camera-target="auto auto auto"
@@ -2466,7 +2465,6 @@ document.addEventListener("DOMContentLoaded", function () {
   window.prevMedia = prevMedia;
 
 let modelViewIsOpen = false;
-let initialInteractionPromptShown = false;
 const DEFAULT_CAMERA_ORBIT = "0deg 75deg auto";
 const DEFAULT_CAMERA_TARGET = "auto auto auto";
 const DEFAULT_FIELD_OF_VIEW = "30deg";
@@ -2525,10 +2523,6 @@ function resetModelView() {
   }
 }
 
-let initialModelRotationStarted = false;
-let initialRotationTimer = null;
-let interactionRotationTimer = null;
-
 function startInitialModelRotation() {
   const model =
     document.getElementById("productModel");
@@ -2537,28 +2531,18 @@ function startInitialModelRotation() {
     return;
   }
 
-  clearTimeout(initialRotationTimer);
-
   /*
-    Während der Bedienanimation bleibt die
-    automatische Drehung ausgeschaltet.
+    Zuerst bleibt auto-rotate kurz ausgeschaltet,
+    damit die Bedienanimation ungestört läuft.
   */
   model.removeAttribute("auto-rotate");
 
-  /*
-    Nach vier Sekunden startet die automatische
-    Drehung ohne weitere interne Verzögerung.
-  */
-  initialRotationTimer = window.setTimeout(
-    function () {
-      model.setAttribute("auto-rotate", "");
-      initialModelRotationStarted = true;
-    },
-    4000
-  );
+  window.setTimeout(function () {
+    model.setAttribute("auto-rotate", "");
+  }, 10000);
 }
 
-function stopRotationDuringInteraction() {
+function prepareModelRotation() {
   const model =
     document.getElementById("productModel");
 
@@ -2566,30 +2550,27 @@ function stopRotationDuringInteraction() {
     return;
   }
 
-  clearTimeout(interactionRotationTimer);
-  model.removeAttribute("auto-rotate");
-}
+  /* Beim ersten Öffnen schnell starten */
+  model.setAttribute(
+    "auto-rotate-delay",
+    "1000"
+  );
 
-function restartRotationAfterInteraction() {
-  const model =
-    document.getElementById("productModel");
-
-  if (!model) {
-    return;
-  }
-
-  clearTimeout(interactionRotationTimer);
+  model.setAttribute(
+    "auto-rotate",
+    ""
+  );
 
   /*
-    Nach Ende der Bedienung bleibt das Modell
-    10 Sekunden ruhig.
+    Nach dem Start gilt für spätere Bedienungen
+    eine Pause von 10 Sekunden.
   */
-  interactionRotationTimer = window.setTimeout(
-    function () {
-      model.setAttribute("auto-rotate", "");
-    },
-    10000
-  );
+  window.setTimeout(function () {
+    model.setAttribute(
+      "auto-rotate-delay",
+      "10000"
+    );
+  }, 1500);
 }
 
 function selectProductModel(modelKey) {
@@ -2717,15 +2698,11 @@ function openModelView() {
   requestAnimationFrame(function () {
     resetModelView();
 
-    if (!initialModelRotationStarted) {
+    if (!initialInteractionPromptShown) {
+      initialInteractionPromptShown = true;
       startInitialModelRotation();
     } else {
-      const model =
-        document.getElementById("productModel");
-
-      if (model) {
-        model.setAttribute("auto-rotate", "");
-      }
+      prepareModelRotation();
     }
   });
 
@@ -2797,28 +2774,6 @@ const modelError =
   document.getElementById("modelError");
 
 if (productModel) {
-
-  productModel.addEventListener(
-    "pointerdown",
-    stopRotationDuringInteraction
-  );
-
-  productModel.addEventListener(
-    "pointerup",
-    restartRotationAfterInteraction
-  );
-
-  productModel.addEventListener(
-    "pointercancel",
-    restartRotationAfterInteraction
-  );
-
-  productModel.addEventListener(
-    "touchend",
-    restartRotationAfterInteraction,
-    { passive: true }
-  );
-
   productModel.addEventListener(
     "load",
     function () {
@@ -2833,11 +2788,8 @@ if (productModel) {
       if (modelViewIsOpen) {
         resetModelView();
 
-        if (initialModelRotationStarted) {
-          productModel.setAttribute(
-            "auto-rotate",
-            ""
-          );
+        if (initialInteractionPromptShown) {
+          prepareModelRotation();
         }
       }
     }
