@@ -2436,13 +2436,13 @@ html.embedded #gallery {
     <div class="model-viewer-box">
       <model-viewer
        id="productModel"
-       src="modelle/Konus_NL8_27_normal 2.glb"
+       src="modelle/_Konus_NL8_27_normal.glb"
        alt="Interaktives 3-D-Modell Konus NL8 27° Normal"
        camera-controls
        touch-action="none"
        disable-tap
        auto-rotate
-       auto-rotate-delay="15000"
+       auto-rotate-delay="0"
        rotation-per-second="10deg"
        camera-orbit="0deg 75deg auto"
        camera-target="auto auto auto"
@@ -3155,7 +3155,7 @@ const DEFAULT_FIELD_OF_VIEW = "30deg";
 
 const productModels = {
   "27°-normal": {
-    src: "modelle/Konus_NL8_27_normal 2.glb",
+    src: "modelle/_Konus_NL8_27_normal.glb",
     altDe:
       "3D-Modell Konus NL8 27° Normal",
     altEn:
@@ -3163,7 +3163,7 @@ const productModels = {
   },
 
   "27°-erhoeht": {
-    src: "modelle/Konus_NL8_27_erhoeht.glb",
+    src: "modelle/_Konus_NL8_27_erhoeht.glb",
     altDe:
       "3D-Modell Konus NL8 27° Erhöht",
     altEn:
@@ -3213,6 +3213,73 @@ function resetModelView() {
   if (typeof model.jumpCameraToGoal === "function") {
     model.jumpCameraToGoal();
   }
+}
+
+let initialModelRotationStarted = false;
+let initialRotationTimer = null;
+let interactionRotationTimer = null;
+
+function startInitialModelRotation() {
+  const model =
+    document.getElementById("productModel");
+
+  if (!model) {
+    return;
+  }
+
+  clearTimeout(initialRotationTimer);
+
+  /*
+    Während der Bedienanimation bleibt die
+    automatische Drehung ausgeschaltet.
+  */
+  model.removeAttribute("auto-rotate");
+
+  /*
+    Nach vier Sekunden startet die automatische
+    Drehung ohne weitere interne Verzögerung.
+  */
+  initialRotationTimer = window.setTimeout(
+    function () {
+      model.setAttribute("auto-rotate", "");
+      initialModelRotationStarted = true;
+    },
+    4000
+  );
+}
+
+function stopRotationDuringInteraction() {
+  const model =
+    document.getElementById("productModel");
+
+  if (!model) {
+    return;
+  }
+
+  clearTimeout(interactionRotationTimer);
+  model.removeAttribute("auto-rotate");
+}
+
+function restartRotationAfterInteraction() {
+  const model =
+    document.getElementById("productModel");
+
+  if (!model) {
+    return;
+  }
+
+  clearTimeout(interactionRotationTimer);
+
+  /*
+    Nach Ende der Bedienung bleibt das Modell
+    10 Sekunden ruhig.
+  */
+  interactionRotationTimer = window.setTimeout(
+    function () {
+      model.setAttribute("auto-rotate", "");
+    },
+    10000
+  );
 }
 
 function selectProductModel(modelKey) {
@@ -3326,10 +3393,7 @@ function openModelView() {
   const toggleButton =
     document.getElementById("modelToggleButton");
 
-  resetModelView();  
-
   modelViewIsOpen = true;
-
   stopVideo();
 
   if (galleryView) {
@@ -3340,14 +3404,36 @@ function openModelView() {
     modelView.classList.add("active");
   }
 
+  requestAnimationFrame(function () {
+    resetModelView();
+
+    if (!initialModelRotationStarted) {
+      startInitialModelRotation();
+    } else {
+      const model =
+        document.getElementById("productModel");
+
+      if (model) {
+        model.setAttribute("auto-rotate", "");
+      }
+    }
+  });
+
   if (toggleText) {
-  toggleText.setAttribute("data-i18n", "closeModel");
-  toggleText.innerHTML =
-    translations[currentLanguage].closeModel;
+    toggleText.setAttribute(
+      "data-i18n",
+      "closeModel"
+    );
+
+    toggleText.innerHTML =
+      translations[currentLanguage].closeModel;
   }
 
   if (toggleButton) {
-    toggleButton.setAttribute("aria-pressed", "true");
+    toggleButton.setAttribute(
+      "aria-pressed",
+      "true"
+    );
   }
 }
 
@@ -3401,15 +3487,51 @@ const modelError =
   document.getElementById("modelError");
 
 if (productModel) {
-  productModel.addEventListener("load", function () {
-    if (modelLoading) {
-      modelLoading.style.display = "none";
-    }
 
-    if (modelError) {
-      modelError.classList.remove("active");
+  productModel.addEventListener(
+    "pointerdown",
+    stopRotationDuringInteraction
+  );
+
+  productModel.addEventListener(
+    "pointerup",
+    restartRotationAfterInteraction
+  );
+
+  productModel.addEventListener(
+    "pointercancel",
+    restartRotationAfterInteraction
+  );
+
+  productModel.addEventListener(
+    "touchend",
+    restartRotationAfterInteraction,
+    { passive: true }
+  );
+
+  productModel.addEventListener(
+    "load",
+    function () {
+      if (modelLoading) {
+        modelLoading.style.display = "none";
+      }
+
+      if (modelError) {
+        modelError.classList.remove("active");
+      }
+
+      if (modelViewIsOpen) {
+        resetModelView();
+
+        if (initialModelRotationStarted) {
+          productModel.setAttribute(
+            "auto-rotate",
+            ""
+          );
+        }
+      }
     }
-  });
+  );
 
   productModel.addEventListener("error", function () {
     if (modelLoading) {
