@@ -1747,6 +1747,7 @@ html.embedded #gallery {
        touch-action="none"
        disable-tap
        auto-rotate
+       auto-rotate-delay="0"
        rotation-per-second="15deg"
        camera-orbit="0deg 75deg auto"
        camera-target="auto auto auto"
@@ -2465,6 +2466,7 @@ document.addEventListener("DOMContentLoaded", function () {
   window.prevMedia = prevMedia;
 
 let modelViewIsOpen = false;
+let initialInteractionPromptShown = false;
 const DEFAULT_CAMERA_ORBIT = "0deg 75deg auto";
 const DEFAULT_CAMERA_TARGET = "auto auto auto";
 const DEFAULT_FIELD_OF_VIEW = "30deg";
@@ -2523,6 +2525,10 @@ function resetModelView() {
   }
 }
 
+let initialModelRotationStarted = false;
+let initialRotationTimer = null;
+let interactionRotationTimer = null;
+
 function startInitialModelRotation() {
   const model =
     document.getElementById("productModel");
@@ -2531,18 +2537,28 @@ function startInitialModelRotation() {
     return;
   }
 
+  clearTimeout(initialRotationTimer);
+
   /*
-    Zuerst bleibt auto-rotate kurz ausgeschaltet,
-    damit die Bedienanimation ungestört läuft.
+    Während der Bedienanimation bleibt die
+    automatische Drehung ausgeschaltet.
   */
   model.removeAttribute("auto-rotate");
 
-  window.setTimeout(function () {
-    model.setAttribute("auto-rotate", "");
-  }, 10000);
+  /*
+    Nach vier Sekunden startet die automatische
+    Drehung ohne weitere interne Verzögerung.
+  */
+  initialRotationTimer = window.setTimeout(
+    function () {
+      model.setAttribute("auto-rotate", "");
+      initialModelRotationStarted = true;
+    },
+    4000
+  );
 }
 
-function prepareModelRotation() {
+function stopRotationDuringInteraction() {
   const model =
     document.getElementById("productModel");
 
@@ -2550,27 +2566,30 @@ function prepareModelRotation() {
     return;
   }
 
-  /* Beim ersten Öffnen schnell starten */
-  model.setAttribute(
-    "auto-rotate-delay",
-    "1000"
-  );
+  clearTimeout(interactionRotationTimer);
+  model.removeAttribute("auto-rotate");
+}
 
-  model.setAttribute(
-    "auto-rotate",
-    ""
-  );
+function restartRotationAfterInteraction() {
+  const model =
+    document.getElementById("productModel");
+
+  if (!model) {
+    return;
+  }
+
+  clearTimeout(interactionRotationTimer);
 
   /*
-    Nach dem Start gilt für spätere Bedienungen
-    eine Pause von 10 Sekunden.
+    Nach Ende der Bedienung bleibt das Modell
+    10 Sekunden ruhig.
   */
-  window.setTimeout(function () {
-    model.setAttribute(
-      "auto-rotate-delay",
-      "10000"
-    );
-  }, 1500);
+  interactionRotationTimer = window.setTimeout(
+    function () {
+      model.setAttribute("auto-rotate", "");
+    },
+    10000
+  );
 }
 
 function selectProductModel(modelKey) {
@@ -2698,11 +2717,15 @@ function openModelView() {
   requestAnimationFrame(function () {
     resetModelView();
 
-    if (!initialInteractionPromptShown) {
-      initialInteractionPromptShown = true;
+    if (!initialModelRotationStarted) {
       startInitialModelRotation();
     } else {
-      prepareModelRotation();
+      const model =
+        document.getElementById("productModel");
+
+      if (model) {
+        model.setAttribute("auto-rotate", "");
+      }
     }
   });
 
@@ -2774,6 +2797,28 @@ const modelError =
   document.getElementById("modelError");
 
 if (productModel) {
+
+  productModel.addEventListener(
+    "pointerdown",
+    stopRotationDuringInteraction
+  );
+
+  productModel.addEventListener(
+    "pointerup",
+    restartRotationAfterInteraction
+  );
+
+  productModel.addEventListener(
+    "pointercancel",
+    restartRotationAfterInteraction
+  );
+
+  productModel.addEventListener(
+    "touchend",
+    restartRotationAfterInteraction,
+    { passive: true }
+  );
+
   productModel.addEventListener(
     "load",
     function () {
@@ -2788,8 +2833,11 @@ if (productModel) {
       if (modelViewIsOpen) {
         resetModelView();
 
-        if (initialInteractionPromptShown) {
-          prepareModelRotation();
+        if (initialModelRotationStarted) {
+          productModel.setAttribute(
+            "auto-rotate",
+            ""
+          );
         }
       }
     }
