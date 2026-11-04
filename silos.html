@@ -1704,8 +1704,8 @@ html.embedded #gallery {
         type="button"
         role="tab"
         aria-selected="true"
-        data-model="Solo NL3"
-        onclick="selectProductModel('Solo-NL3')"
+        data-model="Silo-NL3"
+        onclick="selectProductModel('Silo-NL3')"
         data-i18n="modelTypeNL3"
       >
         Typ NL3
@@ -1717,7 +1717,7 @@ html.embedded #gallery {
         type="button"
         role="tab"
         aria-selected="false"
-        data-model="NL10"
+        data-model="Silo-NL10"
         onclick="selectProductModel('Silo-NL10')"
         data-i18n="modelTypeNL10"
       >
@@ -1725,29 +1725,29 @@ html.embedded #gallery {
       </button>
 
       <button
-        id="modelTabNL20"
+        id="modelTabNL22"
         class="model-tab"
         type="button"
         role="tab"
         aria-selected="false"
-        data-model="NL20"
-        onclick="selectProductModel('Silo-NL20')"
-        data-i18n="modelTypeNL20"
+        data-model="Silo-NL22"
+        onclick="selectProductModel('Silo-NL22')"
+        data-i18n="modelTypeNL22"
       >
-        Typ NL20
+        Typ NL22
       </button>
     </div>
 
     <div class="model-viewer-box">
       <model-viewer
        id="productModel"
-       src="modelle/silo.glb"
-       alt="Interaktives 3-D-Modell des JET-Filters"
+       src="modelle/silo/Silo_NL3_6.glb"
+       alt="Interaktives 3D-Modell"
        camera-controls
        touch-action="none"
        disable-tap
        auto-rotate
-       auto-rotate-delay="15000"
+       auto-rotate-delay="0"
        rotation-per-second="15deg"
        camera-orbit="0deg 75deg auto"
        camera-target="auto auto auto"
@@ -1924,7 +1924,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     modelTypeNL3: "Typ NL3",
     modelTypeNL10: "Typ NL10", 
-    modelTypeNL20: "Typ NL20",
+    modelTypeNL22: "Typ NL22",
 
     roofData:
     "Silodach",
@@ -2040,7 +2040,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     modelTypeNL3: "Type NL3",
     modelTypeNL10: "Type NL10", 
-    modelTypeNL20: "Type NL20",
+    modelTypeNL22: "Type NL22",
 
     roofData:
       "Silo roof",  
@@ -2466,13 +2466,14 @@ document.addEventListener("DOMContentLoaded", function () {
   window.prevMedia = prevMedia;
 
 let modelViewIsOpen = false;
+let initialInteractionPromptShown = false;
 const DEFAULT_CAMERA_ORBIT = "0deg 75deg auto";
 const DEFAULT_CAMERA_TARGET = "auto auto auto";
 const DEFAULT_FIELD_OF_VIEW = "30deg";
 
 const productModels = {
-  "Solo-NL3": {
-    src: "modelle/silo10.glb",
+  "Silo-NL3": {
+    src: "modelle/silo/Silo_NL3_6.glb",
     altDe:
       "3D-Modell des JET-Filters NJF2",
     altEn:
@@ -2480,15 +2481,15 @@ const productModels = {
   },
 
   "Silo-NL10": {
-    src: "modelle/silo20.glb",
+    src: "modelle/silo/Silo_NL10_14.glb",
     altDe:
       "3D-Modell des JET-Filters Duo",
     altEn:
       "3D model of the JET-Filter Duo"
   },
 
-  "Silo-NL20": {
-    src: "modelle/silo30.glb",
+  "Silo-NL22": {
+    src: "modelle/silo/Silo_NL22_25.glb",
     altDe:
       "3D-Modell des JET-Filters Quadro",
     altEn:
@@ -2496,7 +2497,7 @@ const productModels = {
   }
 };
 
-const DEFAULT_PRODUCT_MODEL = "Solo-NL3";
+const DEFAULT_PRODUCT_MODEL = "Silo-NL3";
 
 let selectedProductModel =
   DEFAULT_PRODUCT_MODEL;
@@ -2522,6 +2523,73 @@ function resetModelView() {
   if (typeof model.jumpCameraToGoal === "function") {
     model.jumpCameraToGoal();
   }
+}
+
+let initialModelRotationStarted = false;
+let initialRotationTimer = null;
+let interactionRotationTimer = null;
+
+function startInitialModelRotation() {
+  const model =
+    document.getElementById("productModel");
+
+  if (!model) {
+    return;
+  }
+
+  clearTimeout(initialRotationTimer);
+
+  /*
+    Während der Bedienanimation bleibt die
+    automatische Drehung ausgeschaltet.
+  */
+  model.removeAttribute("auto-rotate");
+
+  /*
+    Nach vier Sekunden startet die automatische
+    Drehung ohne weitere interne Verzögerung.
+  */
+  initialRotationTimer = window.setTimeout(
+    function () {
+      model.setAttribute("auto-rotate", "");
+      initialModelRotationStarted = true;
+    },
+    4000
+  );
+}
+
+function stopRotationDuringInteraction() {
+  const model =
+    document.getElementById("productModel");
+
+  if (!model) {
+    return;
+  }
+
+  clearTimeout(interactionRotationTimer);
+  model.removeAttribute("auto-rotate");
+}
+
+function restartRotationAfterInteraction() {
+  const model =
+    document.getElementById("productModel");
+
+  if (!model) {
+    return;
+  }
+
+  clearTimeout(interactionRotationTimer);
+
+  /*
+    Nach Ende der Bedienung bleibt das Modell
+    10 Sekunden ruhig.
+  */
+  interactionRotationTimer = window.setTimeout(
+    function () {
+      model.setAttribute("auto-rotate", "");
+    },
+    10000
+  );
 }
 
 function selectProductModel(modelKey) {
@@ -2635,10 +2703,7 @@ function openModelView() {
   const toggleButton =
     document.getElementById("modelToggleButton");
 
-  resetModelView();  
-
   modelViewIsOpen = true;
-
   stopVideo();
 
   if (galleryView) {
@@ -2649,14 +2714,36 @@ function openModelView() {
     modelView.classList.add("active");
   }
 
+  requestAnimationFrame(function () {
+    resetModelView();
+
+    if (!initialModelRotationStarted) {
+      startInitialModelRotation();
+    } else {
+      const model =
+        document.getElementById("productModel");
+
+      if (model) {
+        model.setAttribute("auto-rotate", "");
+      }
+    }
+  });
+
   if (toggleText) {
-  toggleText.setAttribute("data-i18n", "closeModel");
-  toggleText.innerHTML =
-    translations[currentLanguage].closeModel;
+    toggleText.setAttribute(
+      "data-i18n",
+      "closeModel"
+    );
+
+    toggleText.innerHTML =
+      translations[currentLanguage].closeModel;
   }
 
   if (toggleButton) {
-    toggleButton.setAttribute("aria-pressed", "true");
+    toggleButton.setAttribute(
+      "aria-pressed",
+      "true"
+    );
   }
 }
 
@@ -2710,15 +2797,51 @@ const modelError =
   document.getElementById("modelError");
 
 if (productModel) {
-  productModel.addEventListener("load", function () {
-    if (modelLoading) {
-      modelLoading.style.display = "none";
-    }
 
-    if (modelError) {
-      modelError.classList.remove("active");
+  productModel.addEventListener(
+    "pointerdown",
+    stopRotationDuringInteraction
+  );
+
+  productModel.addEventListener(
+    "pointerup",
+    restartRotationAfterInteraction
+  );
+
+  productModel.addEventListener(
+    "pointercancel",
+    restartRotationAfterInteraction
+  );
+
+  productModel.addEventListener(
+    "touchend",
+    restartRotationAfterInteraction,
+    { passive: true }
+  );
+
+  productModel.addEventListener(
+    "load",
+    function () {
+      if (modelLoading) {
+        modelLoading.style.display = "none";
+      }
+
+      if (modelError) {
+        modelError.classList.remove("active");
+      }
+
+      if (modelViewIsOpen) {
+        resetModelView();
+
+        if (initialModelRotationStarted) {
+          productModel.setAttribute(
+            "auto-rotate",
+            ""
+          );
+        }
+      }
     }
-  });
+  );
 
   productModel.addEventListener("error", function () {
     if (modelLoading) {

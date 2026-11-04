@@ -1,4 +1,4 @@
-const CACHE_NAME = "neuero-messe-app-konus-silos-v5";
+const CACHE_NAME = "neuero-messe-app-konus-silos-v6";
 
 /*
   Alle Dateien, die für den Offlinebetrieb benötigt werden.
